@@ -1,6 +1,7 @@
 package com.section_09.jpahibernate_advanced.demo;
 
 import com.section_09.jpahibernate_advanced.demo.dao.AppDAO;
+import com.section_09.jpahibernate_advanced.demo.entity.Course;
 import com.section_09.jpahibernate_advanced.demo.entity.Instructor;
 import com.section_09.jpahibernate_advanced.demo.entity.InstructorDetail;
 import org.springframework.boot.CommandLineRunner;
@@ -27,8 +28,36 @@ public class DemoApplication {
 
 //			findInstructorDetailById(appDAO);
 
-			deleteInstructorDetail(appDAO);
+//			deleteInstructorDetail(appDAO);
+
+			createInstructorWithCourses(appDAO);
 		};
+	}
+
+	private void createInstructorWithCourses(AppDAO appDAO) {
+		Instructor tempInstructor = new Instructor(
+				"Susan", "Pem", "susanpem@gmail.com"
+		);
+
+		InstructorDetail tempInstructorDetail = new InstructorDetail(
+				"http://www.susanpem.com/youtube", "Video Games"
+		);
+
+		tempInstructor.setInstructorDetail(tempInstructorDetail);
+		// NOTE: This will also save the details object because of CascadeType.ALL
+
+		Course course = new Course("Java Spring");
+		Course course2 = new Course("PHP Laravel");
+
+		// add courses to instructor
+		tempInstructor.add(course);
+		tempInstructor.add(course2);
+
+		// NOTE: This will also save the courses because of CascadeType.PERSIST
+		System.out.println("Save the instructor with instructor detail and courses");
+		System.out.println(tempInstructor);
+		System.out.println("Courses: " + tempInstructor.getCourses());
+		appDAO.save(tempInstructor);
 	}
 
 	private void deleteInstructorDetail(AppDAO appDAO) {
