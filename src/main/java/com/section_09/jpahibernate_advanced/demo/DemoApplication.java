@@ -9,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 public class DemoApplication {
 
@@ -30,8 +32,74 @@ public class DemoApplication {
 
 //			deleteInstructorDetail(appDAO);
 
-			createInstructorWithCourses(appDAO);
+//			createInstructorWithCourses(appDAO);
+
+//			findInstructorWithCourses(appDAO);
+
+//			findCoursesByInstructorId(appDAO);
+
+//			findInstructorByIdJoinFetch(appDAO);
+
+//			updateInstructor(appDAO);
+
+//			updateCourse(appDAO);
+
+			deleteCourse(appDAO);
 		};
+	}
+
+	private void deleteCourse(AppDAO appDAO) {
+		int theId = 11;
+		appDAO.deleteCourseById(theId);
+	}
+
+	private void updateCourse(AppDAO appDAO) {
+		int theId = 10;
+		Course tempCourse = appDAO.findCourseById(theId);
+		if(tempCourse != null){
+			tempCourse.setTitle("C# Crash Course");
+		}
+
+		appDAO.updateCourse(tempCourse);
+	}
+
+	private void updateInstructor(AppDAO appDAO) {
+		int theId = 1;
+		Instructor tempInstructors = appDAO.findById(theId);
+		System.out.println("tempInstructor: " + tempInstructors);
+
+		tempInstructors.setFirstName("Test update ok");
+
+		appDAO.update(tempInstructors);
+	}
+
+	private void findInstructorByIdJoinFetch(AppDAO appDAO) {
+		int theId = 1;
+		Instructor tempInstructors = appDAO.findInstructorByIdJoinFetch(theId);
+		System.out.println("tempInstructor: " + tempInstructors);
+		System.out.println("Courses: " + tempInstructors.getCourses());
+
+		// select i1_0.id,c1_0.instructor_id,c1_0.id,c1_0.title,i1_0.email,i1_0.first_name,id1_0.id,id1_0.hobby,id1_0.youtube_channel,i1_0.last_name from instructor i1_0 join course c1_0 on i1_0.id=c1_0.instructor_id join instructor_detail id1_0 on id1_0.id=i1_0.instructor_detail_id where i1_0.id=?
+	}
+
+	private void findCoursesByInstructorId(AppDAO appDAO) {
+		int theId = 1;
+		Instructor tempInstructors = appDAO.findById(theId);
+		System.out.println("tempInstructor: " + tempInstructors);
+
+		// fetch = FetchType.LAZY
+		List<Course> courses = appDAO.findCoursesByInstructorId(theId);
+		tempInstructors.setCourses(courses);
+		System.out.println("the associated course: " + tempInstructors.getCourses());
+	}
+
+	private void findInstructorWithCourses(AppDAO appDAO) {
+		int theId = 1;
+		Instructor tempInstructors = appDAO.findById(theId);
+		System.out.println("tempInstructor: " + tempInstructors);
+
+		// fetch = FetchType.EAGER
+		System.out.println("the associated course: " + tempInstructors.getCourses());
 	}
 
 	private void createInstructorWithCourses(AppDAO appDAO) {
