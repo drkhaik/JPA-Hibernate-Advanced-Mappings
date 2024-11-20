@@ -2,6 +2,9 @@ package com.section_09.jpahibernate_advanced.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "course")
 public class Course {
@@ -18,6 +21,10 @@ public class Course {
             CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "instructor_id") // the column in Course table
     private Instructor instructor;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id") // the column in Review table
+    private List<Review> reviews;
 
     public Course(){}
 
@@ -47,6 +54,24 @@ public class Course {
 
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    // add convenience methods for add review
+    public void addReview(Review theReview){
+        if(reviews == null){
+            reviews = new ArrayList<>();
+        }
+
+        reviews.add(theReview);
+        theReview.setCourse(this);
     }
 
     @Override

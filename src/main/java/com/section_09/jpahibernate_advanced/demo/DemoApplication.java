@@ -4,6 +4,7 @@ import com.section_09.jpahibernate_advanced.demo.dao.AppDAO;
 import com.section_09.jpahibernate_advanced.demo.entity.Course;
 import com.section_09.jpahibernate_advanced.demo.entity.Instructor;
 import com.section_09.jpahibernate_advanced.demo.entity.InstructorDetail;
+import com.section_09.jpahibernate_advanced.demo.entity.Review;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -44,8 +45,46 @@ public class DemoApplication {
 
 //			updateCourse(appDAO);
 
-			deleteCourse(appDAO);
+//			deleteCourse(appDAO);
+
+//			createCourse(appDAO);
+
+//			findCourseAndReviewById(appDAO);
+
+			deleteCourseAndReviews(appDAO);
 		};
+	}
+
+	private void deleteCourseAndReviews(AppDAO appDAO) {
+		int theId = 12;
+		appDAO.deleteCourseById(theId);
+		System.out.println("Deleted the Course with id: " + theId);
+		// will delete all the review because the cascade.all
+	}
+
+	private void findCourseAndReviewById(AppDAO appDAO) {
+		int theId = 12;
+		Course course = appDAO.findCourseAndReviewsByCourseId(theId);
+
+		System.out.println("Course: "  +course);
+		System.out.println("Reviews: "  +course.getReviews());
+	}
+
+	private void createCourse(AppDAO appDAO) {
+		Course course = new Course("Javascript NodeJS and ReactJS");
+
+		Review newReview = new Review("Great course");
+		Review newReview2 = new Review("Recommend u guys should test it out!");
+		Review newReview3 = new Review("What a dumb course, u are an idiot!");
+
+		course.addReview(newReview);
+		course.addReview(newReview2);
+		course.addReview(newReview3);
+
+		System.out.println("Course: " + course);
+		System.out.println("Reviews: " + course.getReviews());
+
+		appDAO.saveCourse(course);
 	}
 
 	private void deleteCourse(AppDAO appDAO) {
